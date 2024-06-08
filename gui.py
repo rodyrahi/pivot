@@ -261,7 +261,7 @@ class DataFrameViewer:
             self.show_dataframe(self.dataframes[self.current_df_name].head(10))
 
 def main():
-    root = ttk.Window(title="DataFrame Viewer", themename="superhero", size=(1000, 600))
+    root = ttk.Window(title="Pivot", themename="superhero", size=(1000, 600) )
     app = DataFrameViewer(root)
 
     
