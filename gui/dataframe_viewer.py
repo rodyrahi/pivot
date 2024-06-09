@@ -14,6 +14,7 @@ class DataFrameViewer(tk.Frame):
     def __init__(self, root):
         super().__init__(root)
         self.root = root
+       
         self.dataframes = {}
         self.current_df_name = None
         self.undo_stack = []
@@ -29,6 +30,7 @@ class DataFrameViewer(tk.Frame):
         self.setup_left_frame()
         self.setup_dataframe_frame()
         self.setup_top_frame()
+        
 
     def update_listbox(self):
         self.dataframe_listbox.delete(0, tk.END)
@@ -78,9 +80,14 @@ class DataFrameViewer(tk.Frame):
         self.drop_na_button = ttk.Button(self.top_frame, text="Drop NaN", command=self.drop_na, bootstyle="danger")
         self.drop_na_button.pack(pady=10, side='left' , padx=5)
 
+        self.test_button = ttk.Button(self.top_frame, text="Test", command= lambda : DataCleaner.drop_na( data=self.dataframes[self.current_df_name] , dataframe_frame=self.dataframe_frame), bootstyle="success")
+        self.test_button.pack(pady=10, side='left' , padx=5)
+
     def setup_dataframe_frame(self):
+        
         self.dataframe_frame = DataFrameDisplay(self)
         self.dataframe_frame.pack(side='bottom', expand=True, fill='both')
+
        
     def get_csv(self):
         file_path = askopenfilename(filetypes=[("CSV Files", "*.csv")])
@@ -124,8 +131,9 @@ class DataFrameViewer(tk.Frame):
                 except ValueError:
                     fill_value = option
                 df.fillna(fill_value, inplace=True)
-
             self.dataframe_frame.display_data(df.head(10))
+  
+
 
     @record_undo
     def drop_na(self):

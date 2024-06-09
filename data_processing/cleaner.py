@@ -1,4 +1,6 @@
 import pandas as pd
+import sys
+
 
 class DataCleaner:
     @staticmethod
@@ -8,6 +10,7 @@ class DataCleaner:
     @staticmethod
     def clean_data(data: pd.DataFrame) -> pd.DataFrame:
         cleaned_data = data.dropna()
+
         return cleaned_data
 
     @staticmethod
@@ -15,5 +18,10 @@ class DataCleaner:
         return data.fillna(value)
 
     @staticmethod
-    def drop_na(data: pd.DataFrame, subset=None) -> pd.DataFrame:
-        return data.dropna(subset=subset)
+    def drop_na(data: pd.DataFrame, subset=None , dataframe_frame=None) -> pd.DataFrame:
+        df = data.dropna(subset=subset)
+        dataframe_frame.display_data(df.head(10))
+
+        
+
+        
