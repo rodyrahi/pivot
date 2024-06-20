@@ -1,8 +1,11 @@
+from utils.globel_variables import variables
+
 def record_undo(func):
     def wrapper(self, *args, **kwargs):
-        if self.current_df_name is not None:
-            self.undo_stack.append(self.dataframes[self.current_df_name].copy())
-            self.redo_stack.clear()
+        if variables.current_df_name is not None:
+            print('tsest')
+            variables.undo_stack.append(variables.dataframes[variables.current_df_name].copy())
+            variables.redo_stack.clear()
         return func(self, *args, **kwargs)
     return wrapper
 

@@ -1,5 +1,5 @@
 import pandas as pd
-import sys
+from codegenration.code_genration import CodeGeneration
 
 
 class DataCleaner:
@@ -21,6 +21,9 @@ class DataCleaner:
     def drop_na(data: pd.DataFrame, subset=None , dataframe_frame=None) -> pd.DataFrame:
         df = data.dropna(subset=subset)
         dataframe_frame.display_data(df.head(10))
+        code = f"df = data.dropna(subset={subset})\n"
+        CodeGeneration.generate_code(code)
+
 
         
 
