@@ -2,31 +2,52 @@ import tkinter as tk
 import ttkbootstrap as ttk
 from ttkbootstrap.tableview import Tableview
 from ttkbootstrap.constants import *
+from ttkbootstrap.dialogs import Messagebox
 from utils.functions import *
 
 import pandas as pd
 import numpy as np
 
+
 global dataframes 
 dataframes = []
 
+global current_dataframe
+current_dataframe = None
+
+dt = None
+
+
+
 
 def table_widget(parent, df):
+    global dt
+    if dt is not None:
+        dt.destroy()
+
     dt = Tableview(
-        master=main_frame,
+        master=parent,
         coldata=list(df),
         rowdata=df.to_numpy().tolist(),
         paginated=True,
         searchable=True,
         bootstyle=PRIMARY,
-        pagesize=50
-        
-         
-        
+        pagesize=40
     )
 
     dt.pack(fill=BOTH, expand=YES, padx=10, pady=10)
 
+class TabWidget(ttk.Frame):
+    def __init__(self, parent, tab_names):
+        super().__init__(parent)
+        self.master = parent
+        self.tabs = ttk.Notebook(parent)
+        self.tabs.pack(fill="both", expand=True)
+        self.tab_frames = []
+        for tab_name in tab_names:
+            tab_frame = ttk.Frame(self.tabs)
+            self.tabs.add(tab_frame, text=tab_name)
+            self.tab_frames.append(tab_frame)
 
 
 class DataFrameListbox(ttk.Frame):
@@ -49,8 +70,11 @@ class DataFrameListbox(ttk.Frame):
     
     def on_listbox_select(self, event):
         selected_index = self.listbox.curselection()[0]
-        print(dataframes[selected_index])
-        table_widget(self, dataframes[selected_index][1])
+        tabs = main_tabs.tab_frames
+        table_widget(tabs[0], dataframes[selected_index][1])
+        current_dataframe = dataframes[selected_index][1]
+        show_data(dataframes[selected_index][1] , tabs)
+        
 
 class TopWidget(ttk.Frame):
     def __init__(self, parent, tab_names):
@@ -106,7 +130,7 @@ top_tabs.add_label(tab_index=0, text="Create a new DataFrame", row=0, column=0)
 top_tabs.add_button(tab_index=0, text="Csv file", color="success", row=1, column=0, func=lambda: (open_csv(dataframes), dataframes_listbox.update_listbox()))
 top_tabs.add_button(tab_index=0, text="Existing DataFrame", color="primary", row=1, column=1)
 
-
+main_tabs = TabWidget(main_frame, ["Dataframe", "Description", "Info" , "Nan Values" , "Missing Values" , "Duplicates" ])
 
 
 
