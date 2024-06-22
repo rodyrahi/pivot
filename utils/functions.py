@@ -76,3 +76,15 @@ def open_csv(dataframes):
         dataframe = pd.read_csv(file_name)
        
         dataframes.append((dataframename, dataframe))
+
+
+
+def fill_nan(dataframes , current_dataframe):
+    for index, df in enumerate(dataframes):
+        if df[0] == current_dataframe[0]:
+            value = askstring("Dataframe", f"Enter a value to fill NaN with: ", initialvalue="0")
+            print(current_dataframe[1].fillna(value))
+
+            current_dataframe = (df[0] , current_dataframe[1].fillna(value))
+            dataframes[index] = current_dataframe
+        

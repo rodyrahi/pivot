@@ -12,8 +12,7 @@ import numpy as np
 global dataframes 
 dataframes = []
 
-global current_dataframe
-current_dataframe = None
+
 
 dt = None
 
@@ -71,8 +70,10 @@ class DataFrameListbox(ttk.Frame):
     def on_listbox_select(self, event):
         selected_index = self.listbox.curselection()[0]
         tabs = main_tabs.tab_frames
-        table_widget(tabs[0], dataframes[selected_index][1])
-        current_dataframe = dataframes[selected_index][1]
+        global current_dataframe
+        current_dataframe = (dataframes[selected_index][0],dataframes[selected_index][1])
+        table_widget(tabs[0], current_dataframe[1])
+        
         show_data(dataframes[selected_index][1] , tabs)
         
 
@@ -129,6 +130,11 @@ top_tabs = TopWidget(tab_frame, ["File", "Edit", "View"])
 top_tabs.add_label(tab_index=0, text="Create a new DataFrame", row=0, column=0)
 top_tabs.add_button(tab_index=0, text="Csv file", color="success", row=1, column=0, func=lambda: (open_csv(dataframes), dataframes_listbox.update_listbox()))
 top_tabs.add_button(tab_index=0, text="Existing DataFrame", color="primary", row=1, column=1)
+
+# Top tabs edit setup
+top_tabs.add_label(tab_index=1, text="Nan Values", row=0, column=0)
+top_tabs.add_button(tab_index=1, text="Fill Nan Values", color="primary", row=1, column=0, func=lambda: (fill_nan(dataframes,current_dataframe) , table_widget(main_tabs.tab_frames[0], current_dataframe[1])))
+
 
 main_tabs = TabWidget(main_frame, ["Dataframe", "Description", "Info"  ])
 
