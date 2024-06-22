@@ -14,27 +14,12 @@ dataframes = []
 
 
 
-dt = None
 
 
 
 
-def table_widget(parent, df):
-    global dt
-    if dt is not None:
-        dt.destroy()
 
-    dt = Tableview(
-        master=parent,
-        coldata=list(df),
-        rowdata=df.to_numpy().tolist(),
-        paginated=True,
-        searchable=True,
-        bootstyle=PRIMARY,
-        pagesize=40
-    )
 
-    dt.pack(fill=BOTH, expand=YES, padx=10, pady=10)
 
 class TabWidget(ttk.Frame):
     def __init__(self, parent, tab_names):
@@ -68,13 +53,15 @@ class DataFrameListbox(ttk.Frame):
                 self.listbox.insert(tk.END, df[0])
     
     def on_listbox_select(self, event):
-        selected_index = self.listbox.curselection()[0]
-        tabs = main_tabs.tab_frames
-        global current_dataframe
-        current_dataframe = (dataframes[selected_index][0],dataframes[selected_index][1])
-        table_widget(tabs[0], current_dataframe[1])
+        if self.listbox.curselection():
         
-        show_data(dataframes[selected_index][1] , tabs)
+            selected_index = self.listbox.curselection()[0]
+            tabs = main_tabs.tab_frames
+            global current_dataframe
+            current_dataframe = (dataframes[selected_index][0],dataframes[selected_index][1])
+            table_widget(tabs[0], current_dataframe[1])
+            
+            show_data(dataframes[selected_index][1] , tabs)
         
 
 class TopWidget(ttk.Frame):
@@ -133,7 +120,14 @@ top_tabs.add_button(tab_index=0, text="Existing DataFrame", color="primary", row
 
 # Top tabs edit setup
 top_tabs.add_label(tab_index=1, text="Nan Values", row=0, column=0)
-top_tabs.add_button(tab_index=1, text="Fill Nan Values", color="primary", row=1, column=0, func=lambda: (fill_nan(dataframes,current_dataframe) , table_widget(main_tabs.tab_frames[0], current_dataframe[1])))
+top_tabs.add_button(tab_index=1, text="Fill Nan Values", color="primary", row=1, column=0, func=lambda:    fill_nan(dataframes,current_dataframe , main_tabs))
+
+top_tabs.add_label(tab_index=1, text="Nan Values", row=0, column=1)
+top_tabs.add_button(tab_index=1, text="Replace", color="primary", row=1, column=1, func=lambda:  replace(window , dataframes , current_dataframe , main_tabs))
+
+
+top_tabs.add_label(tab_index=1, text="Columns", row=0, column=2)
+top_tabs.add_button(tab_index=1, text="Col To LowerCase", color="primary", row=1, column=2, func=lambda:  col_to_lowercase(window , dataframes , current_dataframe , main_tabs))
 
 
 main_tabs = TabWidget(main_frame, ["Dataframe", "Description", "Info"  ])

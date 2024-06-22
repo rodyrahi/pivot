@@ -11,6 +11,39 @@ from ttkbootstrap.constants import *
 
 tree , tree_describe = None , None
 
+dt = None
+
+def open_popup(win):
+    top= tk.Toplevel(win)
+    top.geometry("500x250+%d+%d" % ((win.winfo_screenwidth()/2)-(500/2), (win.winfo_screenheight()/2)-(250/2)))
+    top.title("Child Window")
+    top.focus_set()
+    top.grab_set()
+
+    return top
+
+
+
+
+
+def table_widget(parent, df):
+    global dt
+    if dt is not None:
+        dt.destroy()
+
+    dt = Tableview(
+        master=parent,
+        coldata=list(df),
+        rowdata=df.to_numpy().tolist(),
+        paginated=True,
+        searchable=True,
+        bootstyle=PRIMARY,
+        pagesize=40
+    )
+
+    dt.pack(fill=BOTH, expand=YES, padx=10, pady=10)
+
+
 def show_data(df, tabs):
     
     global tree 
@@ -77,9 +110,7 @@ def open_csv(dataframes):
        
         dataframes.append((dataframename, dataframe))
 
-
-
-def fill_nan(dataframes , current_dataframe):
+def fill_nan(dataframes , current_dataframe , main_tabs):
     for index, df in enumerate(dataframes):
         if df[0] == current_dataframe[0]:
             value = askstring("Dataframe", f"Enter a value to fill NaN with: ", initialvalue="0")
@@ -87,4 +118,67 @@ def fill_nan(dataframes , current_dataframe):
 
             current_dataframe = (df[0] , current_dataframe[1].fillna(value))
             dataframes[index] = current_dataframe
-        
+            table_widget(main_tabs.tab_frames[0], current_dataframe[1])
+
+def replace(win , dataframes , current_dataframe , main_tabs):
+    popup = open_popup(win)
+
+    ttk.Label(popup , text="select or enter values to replace").pack(side="top" , padx=10 , pady=10)
+
+    ttk.Entry(popup).pack(side="top" , padx=10 , pady=10)
+    ttk.Entry(popup).pack(side="top" , padx=10 , pady=10)
+    ttk.Button(popup , text="Appy Changes").pack(side="bottom" , padx=10 , pady=10)
+
+    # open_popup(win , current_dataframe[1])
+    # for index, df in enumerate(dataframes):
+    #     if df[0] == current_dataframe[0]:
+    #         value = askstring("Dataframe", f"Enter a value to fill NaN with: ", initialvalue="0")
+            
+
+    #         current_dataframe = (df[0] , current_dataframe[1].fillna(value))
+    #         dataframes[index] = current_dataframe
+    #         table_widget(main_tabs.tab_frames[0], current_dataframe[1])
+
+def col_to_lowercase( win , dataframes , current_dataframe , main_tabs):
+
+    popup = open_popup(win)
+    cb = ttk.Combobox(popup)
+    ttk.Label(popup , text="select columns to change to lowercase").pack(side="top" , padx=10 , pady=10)
+    
+    values = current_dataframe[1].columns.tolist() + ['All']
+    
+    cb["values"] =  values
+    cb.current(len(values)-1)
+    cb.pack(side="top" , padx=10 , pady=10)
+
+    def change( current_dataframe , dataframes):
+        for index, df in enumerate(dataframes):
+            if df[0] == current_dataframe[0]:
+                if cb.get() == 'All':
+                           
+                    current_dataframe = (
+                        df[0],
+                        current_dataframe[1].rename(columns=str.lower)
+                    )
+
+                    
+                    dataframes[index] = current_dataframe
+
+                    print(current_dataframe[1])
+                    table_widget(main_tabs.tab_frames[0], current_dataframe[1])
+
+                else:
+                    current_dataframe = (
+                        df[0],
+                        current_dataframe[1].rename(columns={cb.get(): cb.get().lower()})
+                    )
+
+                    # current_dataframe = (current_dataframe[0] , current_dataframe[1][cb.get()].applymap(lambda x: x.lower() if isinstance(x, str) else x))
+                    dataframes[index] = current_dataframe
+                    table_widget(main_tabs.tab_frames[0], current_dataframe[1])
+        popup.destroy()
+
+
+    ttk.Button(popup , text="Appy Changes" , command=lambda : change(current_dataframe , dataframes)).pack(side="bottom" , padx=10 , pady=10)
+
+
