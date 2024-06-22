@@ -24,7 +24,7 @@ def show_data(df, tabs):
     
     df_duplicates = df[df.duplicated(keep=False)]
     duplicated_sums = df_duplicates.sum()
-    
+    print(duplicated_sums)
     data_info = {
         "Sno.": range(len(df.columns)),
         "Count": df.count(),
@@ -67,9 +67,6 @@ def show_data(df, tabs):
 
     # Pack the Treeview for describe() summary
     tree_describe.pack(expand=True, fill="both" , padx=10, pady=10)
-
-
-    
 
 
 def open_csv(dataframes):

@@ -130,7 +130,7 @@ top_tabs.add_label(tab_index=0, text="Create a new DataFrame", row=0, column=0)
 top_tabs.add_button(tab_index=0, text="Csv file", color="success", row=1, column=0, func=lambda: (open_csv(dataframes), dataframes_listbox.update_listbox()))
 top_tabs.add_button(tab_index=0, text="Existing DataFrame", color="primary", row=1, column=1)
 
-main_tabs = TabWidget(main_frame, ["Dataframe", "Description", "Info" , "Nan Values" , "Missing Values" , "Duplicates" ])
+main_tabs = TabWidget(main_frame, ["Dataframe", "Description", "Info"  ])
 
 
 
