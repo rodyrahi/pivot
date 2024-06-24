@@ -15,7 +15,7 @@ dt = None
 
 def open_popup(win):
     top= tk.Toplevel(win)
-    top.geometry("500x250+%d+%d" % ((win.winfo_screenwidth()/2)-(500/2), (win.winfo_screenheight()/2)-(250/2)))
+    top.geometry("400x200+%d+%d" % ((win.winfo_screenwidth()/2)-(500/2), (win.winfo_screenheight()/2)-(250/2)))
     top.title("Child Window")
     top.focus_set()
     top.grab_set()
