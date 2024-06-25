@@ -4,7 +4,7 @@ from ttkbootstrap.tableview import Tableview
 from ttkbootstrap.constants import *
 from ttkbootstrap.dialogs import Messagebox
 from utils.functions import *
-
+from utils.code import *
 import pandas as pd
 import numpy as np
 
@@ -61,7 +61,7 @@ class DataFrameListbox(ttk.Frame):
             current_dataframe = (dataframes[selected_index][0],dataframes[selected_index][1])
             table_widget(tabs[0], current_dataframe[1])
             
-            show_data(dataframes[selected_index][1] , tabs)
+            show_data(dataframes[selected_index] , tabs)
         
 
 class TopWidget(ttk.Frame):

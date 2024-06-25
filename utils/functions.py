@@ -6,7 +6,7 @@ import tkinter as tk
 import ttkbootstrap as ttk
 from ttkbootstrap.tableview import Tableview
 from ttkbootstrap.constants import *
-
+from utils.code import *
 
 
 tree , tree_describe = None , None
@@ -44,8 +44,10 @@ def table_widget(parent, df):
     dt.pack(fill=BOTH, expand=YES, padx=10, pady=10)
 
 
-def show_data(df, tabs):
+def show_data(dataframe, tabs ):
     
+    df = dataframe[1]
+    df_name = dataframe[0]
     global tree 
     global tree_describe
     
@@ -100,6 +102,15 @@ def show_data(df, tabs):
 
     # Pack the Treeview for describe() summary
     tree_describe.pack(expand=True, fill="both" , padx=10, pady=10)
+
+    code = ["import pandas as pd\n",f"df = pd.read_csv('{df_name}.csv')\n","df.duplicated(keep=False)"]
+
+    for c in code:
+
+        code_to_notebook(c)
+
+
+
 
 
 def open_csv(dataframes):

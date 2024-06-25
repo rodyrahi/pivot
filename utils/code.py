@@ -25,4 +25,4 @@ def code_to_notebook(code):
     with open(file_path, 'w', encoding='utf-8') as file:
         nbformat.write(nb, file)
 
-code_to_notebook("df = data.dropna(subset=None)")
+
